@@ -7,13 +7,13 @@ public sealed class PlayerScript : MonoBehaviour
     /* Variables. */
     public Rigidbody2D rigidbody;
 
-    private Vector2 currentvelo = Vector2.zero;
+    public Vector2 currentvelo = Vector2.zero;
     public float dashing;
     public float cheight;
     public bool onground;
 
-    [Range(0.5f, 2.5f)] public float walkingspeed = 0.75f;
-    [Range(0.5f, 3.5f)] public float jumpingamount = 0.75f;
+    [Range(0.5f, 2.5f)] public float walkingspeed = 0.85f;
+    [Range(0.5f, 1f)] public float jumpingamount = 0.75f;
     [Range(0.1f, 1f)] public float frictionspeed = 0.3f;
 
     /* Unity Methods. */
@@ -74,13 +74,14 @@ public sealed class PlayerScript : MonoBehaviour
         if (dashing != 0f)
             velo *= dashing;
 
-        transform.Translate(velo);
+        float airfactor = (onground ? 1f : 0.65f);
+        transform.Translate(velo * airfactor);
          
         if (Input.GetKeyDown(KeyCode.Space))
         {
             /* Added method with ref for those who need it. */
             if(IsOnGround(ref cheight))
-                rigidbody.AddForce(transform.up * 400f);
+                rigidbody.AddForce(transform.up * 400f * jumpingamount);
         }
     }
 

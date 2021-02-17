@@ -463,6 +463,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 0}
+  currentvelo: {x: 0, y: 0}
   dashing: 0
-  walkingspeed: 1.2
-  jumpingamount: 2.2
+  cheight: 0
+  onground: 0
+  walkingspeed: 0.85
+  jumpingamount: 0.75
+  frictionspeed: 0.3
