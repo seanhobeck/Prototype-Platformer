@@ -47,7 +47,7 @@ public sealed class PlayerScript : MonoBehaviour
     public IEnumerator ShiftTimer() 
     {
         yield return new WaitForSeconds(.25f); 
-        dashing = 1f;                              // <----- @owengretzinger,   fixed by setting it equal to 1,  example:  8 * 1 = 1.
+        dashing = 1f;                              // <----- @owengretzinger,   fixed by setting it equal to 1,  example:  8 * 1 = 8.
         yield return new WaitForSeconds(5);
         dashing = 0f;
     }
