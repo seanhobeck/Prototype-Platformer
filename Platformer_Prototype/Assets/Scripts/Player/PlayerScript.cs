@@ -9,9 +9,12 @@ public sealed class PlayerScript : MonoBehaviour
 
     private Vector2 currentvelo = Vector2.zero;
     public float dashing;
+    public float cheight;
+    public bool onground;
 
-    [Range(1f, 2.5f)] public float walkingspeed = 1.2f;
-    [Range(1f, 3.5f)] public float jumpingamount = 2.2f;
+    [Range(0.5f, 2.5f)] public float walkingspeed = 0.75f;
+    [Range(0.5f, 3.5f)] public float jumpingamount = 0.75f;
+    [Range(0.1f, 1f)] public float frictionspeed = 0.3f;
 
     /* Unity Methods. */
     #region UnityMethods
@@ -38,15 +41,16 @@ public sealed class PlayerScript : MonoBehaviour
 
     public IEnumerator ShiftTimer() 
     {
-        yield return new WaitForSeconds(.25f);
-        dashing = 0f;
+        yield return new WaitForSeconds(.25f); 
+        dashing = 1f;                              // <----- @owengretzinger,   fixed by setting it equal to 1,  example:  8 * 1 = 1.
         yield return new WaitForSeconds(5);
+        dashing = 0f;
     }
 
     public void UpdateMovement()
     {
         /* Dash Keycode check. */
-        if (Input.GetKeyDown(KeyCode.LeftShift)) 
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashing == 0f) 
         {
             dashing = 3.85f;
             StartCoroutine(ShiftTimer());
@@ -57,7 +61,7 @@ public sealed class PlayerScript : MonoBehaviour
 
         /* Slight smoothing so the player movement isn't too snappy. */
         Vector2 movedir = Vector2.zero;
-        movedir = Vector2.SmoothDamp(movedir, new Vector2(horiz, 0), ref currentvelo, 0.1f);
+        movedir = Vector2.SmoothDamp(movedir, new Vector2(horiz, 0), ref currentvelo, frictionspeed);     // <----- @Chris Q,   this friction method is already implentated and is changeable.
 
         Vector3 velo = (movedir * transform.right) * walkingspeed;
 
@@ -65,25 +69,32 @@ public sealed class PlayerScript : MonoBehaviour
         if (dashing != 0f)
             velo *= dashing;
 
-        transform.Translate(velo, Space.Self);
+        transform.Translate(velo);
          
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            /* Ignore everything but the stuff in layer 3. */
-            int mask = 1 << 3;
-            mask = ~mask;
-
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, mask);
-            
-            /* Get the point magnitude. */
-            Vector2 delta = (Vector2)transform.position - hit.point;
-            float dist = Mathf.Abs(delta.magnitude);
-
-
-            /* Distance is less than the height plus a little. */
-            if (dist <= transform.localScale.y + 0.1f)
+            /* Added method with ref for those who need it. */
+            if(IsOnGround(ref cheight))
                 rigidbody.AddForce(transform.up * 400f);
         }
+    }
+
+    public bool IsOnGround(ref float reff) 
+    {
+        /* Ignore everything but the stuff in layer 3. */
+        int mask = 1 << 3;
+        mask = ~mask;
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, mask);
+
+        /* Get the point magnitude. */
+        Vector2 delta = (Vector2)transform.position - hit.point;
+        float dist = Mathf.Abs(delta.magnitude);
+
+        reff = dist;
+        
+        /* Distance is less than the height plus a little. */
+        return dist <= transform.localScale.y + 0.1f;
     }
 
     #endregion
