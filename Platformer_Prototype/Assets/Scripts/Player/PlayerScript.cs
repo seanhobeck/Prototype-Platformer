@@ -19,7 +19,7 @@ public sealed class PlayerScript : MonoBehaviour
     /* Unity Methods. */
     #region UnityMethods
 
-    void Awake()
+    private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -29,9 +29,14 @@ public sealed class PlayerScript : MonoBehaviour
         /* Initialize some things like the inventory. */
     }
 
-    void Update()
+    private void Update()
     {
         this.UpdateMovement();
+    }
+
+    private void FixedUpdate()
+    {
+        onground = IsOnGround(ref cheight);
     }
 
     #endregion
