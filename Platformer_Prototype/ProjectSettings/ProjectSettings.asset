@@ -145,7 +145,8 @@ PlayerSettings:
   resolutionScalingMode: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.DefaultCompany.PlatformerPrototype
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -550,7 +551,7 @@ PlayerSettings:
   managedStrippingLevel: {}
   incrementalIl2cppBuild: {}
   suppressCommonWarnings: 1
-  allowUnsafeCode: 0
+  allowUnsafeCode: 1
   useDeterministicCompilation: 1
   useReferenceAssemblies: 1
   enableRoslynAnalyzers: 1
@@ -561,8 +562,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: 2D_BuiltInRenderer
-  metroPackageVersion: 
+  metroPackageName: 2DBuiltInRenderer
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -570,7 +571,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: 2D_BuiltInRenderer
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Platformer_Prototype
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
