@@ -5,7 +5,10 @@ using UnityEngine;
 public sealed class PlayerScript : MonoBehaviour
 {
     /* Variables. */
+    public Transform child;
     public Rigidbody2D rigidbody;
+    public ParticleSystem walkingparticles;
+    public Animator anim;
 
     public Vector2 currentvelo = Vector2.zero;
     public float dashing;
@@ -22,6 +25,9 @@ public sealed class PlayerScript : MonoBehaviour
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
+        child = GetComponentInChildren<Transform>();
+        walkingparticles = GetComponentInChildren<ParticleSystem>();
     }
 
     private void Start()
@@ -37,6 +43,15 @@ public sealed class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         onground = IsOnGround(ref cheight);
+        if (transform.position.y <= -30f)
+        {
+            transform.position = new Vector3(0f, 0f, 0f);
+
+            /* 
+             * This is where you would also run all of your death animations and loses of life etc,
+             * Its simply just a void for the time being.
+             */
+        }
     }
 
     #endregion
@@ -83,6 +98,14 @@ public sealed class PlayerScript : MonoBehaviour
             if(IsOnGround(ref cheight))
                 rigidbody.AddForce(transform.up * 400f * jumpingamount);
         }
+
+        /* horiz < 0; meaning we are moving to the right. */
+        bool flip = horiz < 0;
+        child.eulerAngles = new Vector3(0, flip ? 180f : 0f, 0f);
+        /* horiz == 0; no input meaning no moving. */
+        anim.SetBool("walk", horiz != 0);
+        /* Create some cool walking particles, only if on the ground and moving. */
+        walkingparticles.enableEmission = (horiz != 0 && onground);
     }
 
     public bool IsOnGround(ref float reff) 
